@@ -40,13 +40,11 @@ def create_table():
 
 def hash_password(password):
     salt = bcrypt.gensalt()
-    # Don't encode - bcrypt wants string in this version
-    return bcrypt.hashpw(password, salt).decode('utf-8')
+    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8') 
 
 def verify_password(password, password_hash):
     """Verifiziert ein Passwort gegen einen Hash."""
-    # Don't encode - bcrypt wants string in this version
-    return bcrypt.checkpw(password, password_hash)
+    return bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8'))
 
 def add_user(username, email, password):
     """Fügt einen neuen User hinzu und gibt seine ID zurück."""
