@@ -1,3 +1,11 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Simulate loading delay (or wait for your actual data to load)
+    setTimeout(() => {
+        document.getElementById('loading-spinner').classList.add('hidden');
+        document.getElementById('dashboard-content').classList.remove('hidden');
+    }, 1200); // Shows spinner for 1.5 seconds
+}); 
+ 
  // JavaScript für das mobile Menü
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
