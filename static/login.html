@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Finanztracker</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2196F3">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+    <main class="container mx-auto mt-28 mb-12 px-4">
+        <div class="max-w-md mx-auto">
+            
+            <!-- Überschrift -->
+            <h1 class="text-4xl font-bold text-gray-800 text-center md:text-5xl">
+                Track your expenses <span class="text-blue-600">safe and fast</span>.
+            </h1>
+
+            <!-- Tab Buttons -->
+            <div class="mt-10 flex border-b border-gray-300">
+                <button id="login-tab" class="flex-1 py-3 text-center font-semibold text-blue-600 border-b-2 border-blue-600">
+                    Login
+                </button>
+                <button id="register-tab" class="flex-1 py-3 text-center font-semibold text-gray-600 hover:text-blue-600">
+                    Register
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="mt-8 space-y-6">
+                <div>
+                    <label for="login-username" class="block text-base font-medium text-gray-700">Username</label>
+                    <input type="text" id="login-username" required class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="testuser">
+                </div>
+
+                <div>
+                    <label for="login-password" class="block text-base font-medium text-gray-700">Password</label>
+                    <input type="password" id="login-password" required class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Login
+                </button>
+
+                <p id="login-message" class="text-center text-sm mt-4 text-red-600"></p>
+            </form>
+
+            <!-- Register Form (hidden by default) -->
+            <form id="register-form" class="mt-8 space-y-6 hidden">
+                <div>
+                    <label for="register-username" class="block text-base font-medium text-gray-700">Username</label>
+                    <input type="text" id="register-username" required class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="testuser">
+                </div>
+
+                <div>
+                    <label for="register-email" class="block text-base font-medium text-gray-700">Email</label>
+                    <input type="email" id="register-email" required class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="test@example.com">
+                </div>
+
+                <div>
+                    <label for="register-password" class="block text-base font-medium text-gray-700">Password</label>
+                    <input type="password" id="register-password" required class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Register
+                </button>
+
+                <p id="register-message" class="text-center text-sm mt-4 text-red-600"></p>
+            </form>
+
+        </div>
+    </main>
+
+    <script src="/auth.js"></script>
+    <script>
+        // Redirect wenn bereits eingeloggt
+        if (isAuthenticated()) {
+            window.location.href = '/index.html';
+        }
+
+        // Tab Switching
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('text-blue-600', 'border-blue-600');
+            loginTab.classList.remove('text-gray-600');
+            registerTab.classList.remove('text-blue-600', 'border-blue-600');
+            registerTab.classList.add('text-gray-600');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('text-blue-600', 'border-blue-600');
+            registerTab.classList.remove('text-gray-600');
+            loginTab.classList.remove('text-blue-600', 'border-blue-600');
+            loginTab.classList.add('text-gray-600');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+
+        // Login Handler
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const message = document.getElementById('login-message');
+
+            try {
+                await login(username, password);
+                window.location.href = '/index.html';
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+
+        // Register Handler
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const message = document.getElementById('register-message');
+
+            try {
+                await register(username, email, password);
+                window.location.href = '/index.html';
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>
+

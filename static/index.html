@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanztracker</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Theme Color für Browser -->
+    <meta name="theme-color" content="#2196F3">
+    
+    <!-- Apple Touch Icon (für iOS) -->
+    <link rel="apple-touch-icon" href="/icons/android/android-launchericon-192-192.png">
+    
+    <!-- Apple Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MyApp">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+    <script src="/auth.js"></script>
+    <script>
+        // Prüfe ob eingeloggt, sonst redirect zu login
+        requireAuth();
+    </script>
+
+    <header id="header" class="bg-white shadow-md fixed 
+                w-full top-0 mb-1">
+        <div class="container mx-auto flex items-center justify-between p-4">
+
+            <!-- Linke Seite: Logo und Titel -->
+            <div class="flex items-center space-x-3">
+                <!-- Ersetze dies mit deinem Logo -->
+                <img src="https://placehold.co/40x40/3b82f6/ffffff?text=F" alt="Logo" class="h-10 w-10 rounded-full">
+                <span class="text-xl font-bold text-gray-800">Finanztracker</span>
+            </div>
+
+            <!-- Rechte Seite: Desktop-Navbar -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="./index.html" class="text-blue-600 font-semibold">Upload</a>
+                <a href="./dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <button onclick="logout()" class="text-gray-600 hover:text-red-600">Logout</button>
+            </nav>
+
+            <!-- Hamburger-Button für mobile Ansicht -->
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m4 6H4" />
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Mobiles Menü (standardmäßig ausgeblendet) -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="./index.html" class="block py-2 px-4 text-sm text-gray-700 bg-gray-100 font-semibold">Upload</a>
+            <a href="./dashboard.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Dashboard</a>
+            <button onclick="logout()" class="block w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Logout</button>
+        </div>
+    </header>
+
+    <!-- Eingabeformular Section -->
+    <main class="container mx-auto mt-28 mb-12 px-4">
+        <div class="max-w-md mx-auto text-center">
+            
+            <!-- Überschrift -->
+            <h1 class="text-4xl font-bold text-gray-800 md:text-5xl">
+                Track your expenses <span class="text-blue-600">safe and fast</span>.
+            </h1>
+
+            <!-- Formular -->
+            <form id="expense-form" class="mt-10 space-y-8 text-left">
+                
+                <!-- Amount Input -->
+                <div>
+                    <label for="amount" class="block text-base font-medium text-gray-700">Amount</label>
+                    <div class="mt-2">
+                        <!-- NEU: step="0.01" für Kommazahlen und größere Schrift/Padding -->
+                        <input type="number" step="0.01" name="amount" id="amount" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="31.22">
+                    </div>
+                </div>
+
+                <!-- Category Dropdown -->
+                <div>
+                    <label for="category" class="block text-base font-medium text-gray-700">Category</label>
+                    <div class="mt-2">
+                        <!-- NEU: Größere Schrift/Padding -->
+                        <select id="category" name="category" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3">
+                            <option>Essen</option>
+                            <option>Freunde</option>
+                            <option>Sport</option>
+                            <option>Luxus</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Info Input -->
+                <div>
+                    <label for="info" class="block text-base font-medium text-gray-700">Info</label>
+                    <div class="mt-2">
+                        <!-- NEU: Größere Schrift/Padding -->
+                        <input type="text" name="info" id="info" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" placeholder="Dinner with friends">
+                    </div>
+                </div>
+
+                <!-- Date Input -->
+                <div>
+                    <label for="date" class="block text-base font-medium text-gray-700">Date</label>
+                    <div class="mt-2">
+                        <!-- NEU: Größere Schrift/Padding -->
+                        <input type="datetime-local" name="date" id="date" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3">
+                    </div>
+                </div>
+
+                <!-- Safe Button -->
+                <div>
+                    <!-- NEU: Größere Schrift/Padding -->
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Safe
+                    </button>
+                </div>
+                <p id="form-message" class="text-center text-sm mt-4"></p>
+            </form>
+        </div>
+    </main>
+    <script src="/indexeddb.js"></script>
+    <script src="/sync.js"></script>
+    <!-- Offline-Indikator -->
+    <script src="/offline-indicator.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('✅ Service Worker registriert:', reg))
+                    .catch(err => console.error('❌ Service Worker Fehler:', err));
+            });
+        }
+    </script>
+    <script src="upload.js" defer></script>
+
+</body>
+</html>
